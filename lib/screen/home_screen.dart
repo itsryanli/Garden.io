@@ -20,7 +20,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // weather api key
-  final _weatherService = WeatherService('c5637386d600144341ebeee38e35c864');
+  // apiKey = c5637386d600144341ebeee38e35c864, replace this with the apiKey below
+  final _weatherService = WeatherService('apiKey');
 
   Weather? _weather;
 
