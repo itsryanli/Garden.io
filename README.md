@@ -21,3 +21,8 @@ samples, guidance on mobile development, and a full API reference.
 - TensorFlow Lite
 - Generative AI(OpenAI)
 
+## API key authentication problem in github
+- You have to replace the api key by yourself in
+  1. #homepage under class _HomeScreenState (weather API)
+  2. .env file (Open AI)
+
