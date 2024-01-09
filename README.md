@@ -1,6 +1,6 @@
 # gardenio
 
-A new Flutter project.
+A new Flutter project to encourage and teach people to perform gardening from 0 to 1.
 
 ## Getting Started
 
@@ -14,3 +14,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Technology Integrated: Flutter, Firebase, TensorFlow Lite, Generative AI(OpenAI)
+
