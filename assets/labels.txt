@@ -1,0 +1,13 @@
+0 Maize Corn Healthy
+1 Maize Corn Common Rust
+2 Apple Scab Disease
+3 Apple Black Rot
+4 Apple Healthy
+5 Grape Healthy
+6 Grape Black Rot
+7 Potato Healthy
+8 Potato Early Blight
+9 Potato Late Blight
+10 Tomato Healthy
+11 Tomato Early Blight
+12 Tomato Late Blight

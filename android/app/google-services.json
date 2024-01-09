@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "75095310994",
+    "project_id": "kitahack-rempits",
+    "storage_bucket": "kitahack-rempits.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75095310994:android:bc17414af8c2ad74135c4b",
+        "android_client_info": {
+          "package_name": "com.example.gardenio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "75095310994-183g13k6uk7nnqcrp8snl35j83pqjlb6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gardenio",
+            "certificate_hash": "3e22a7505a602cad8c51753beed0e0092a3f8a03"
+          }
+        },
+        {
+          "client_id": "75095310994-8k653iksflcc8k19abe3k8g0e5q7mm0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMVBwwsoHTKURlU4AgyWKgQW73jmgRZZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "75095310994-8k653iksflcc8k19abe3k8g0e5q7mm0j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "75095310994-6782k4sbvrbmjlobcdjtk7efnqopgng6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gardenio.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75095310994:android:61c28f532a8543ee135c4b",
+        "android_client_info": {
+          "package_name": "com.kitahack.kitahack_testing1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "75095310994-069usrhcqlojign7bk4mhc5dqieoeltr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kitahack.kitahack_testing1",
+            "certificate_hash": "379c9025602051f74b009cae907ea9b0c3706209"
+          }
+        },
+        {
+          "client_id": "75095310994-8k653iksflcc8k19abe3k8g0e5q7mm0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMVBwwsoHTKURlU4AgyWKgQW73jmgRZZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "75095310994-8k653iksflcc8k19abe3k8g0e5q7mm0j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "75095310994-6782k4sbvrbmjlobcdjtk7efnqopgng6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gardenio.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
