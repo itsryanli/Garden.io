@@ -23,6 +23,6 @@ samples, guidance on mobile development, and a full API reference.
 
 ## API key authentication problem in github
 - You have to replace the api key by yourself in
-  1. #homepage under class _HomeScreenState (weather API)
-  2. .env file (Open AI)
+  1. class _HomeScreenState (weather API) under #home_screen.dart 
+  2. remove the all the * in between the API key in .env file (Open AI)
 
