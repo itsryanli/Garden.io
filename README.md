@@ -2,6 +2,8 @@
 
 A new Flutter project to encourage and teach people to perform gardening from 0 to 1.
 
+Download gardenio APK from this google drive - https://drive.google.com/file/d/1LnUFUDU9mJ0nXnDrhqj6s60A3ALBEb_T/view?usp=sharing
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
