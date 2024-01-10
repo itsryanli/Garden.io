@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
 import 'package:tflite_v2/tflite_v2.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +18,14 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
   late File _image;
   late List _output;
   final picker = ImagePicker();
+  String imageUrl = '';
+
+  // Refer to the current user
+  final user = FirebaseAuth.instance.currentUser!;
+
+  // Reference to the Firestore collection
+  late CollectionReference users;
+  late DocumentReference userDocRef;
 
   @override
   void initState() {
@@ -22,6 +33,10 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
     loadModel().then((value) {
       setState(() {});
     });
+
+    // fetch the user's UID as the document ID on startup
+    users = FirebaseFirestore.instance.collection('users');
+    userDocRef = users.doc(user.uid);
   }
 
   detectImage(File image) async {
@@ -42,6 +57,9 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
           _output = output;
           _loading = false;
         });
+        updateFirestoreWithNewImage(
+            imageUrl, _output[0]['label'], DateTime.now());
+
         // print("Model Output: $_output");
       } else {
         // print('Unable to detect image');
@@ -62,24 +80,99 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
     }
   }
 
+  // Method to update Firestore document with a new recipe entry
+  Future<void> updateFirestoreWithNewImage(
+      String imageUrl, String output, DateTime time) async {
+    try {
+      // Retrieve existing content of the 'recipe' array
+      var documentSnapshot = await userDocRef.get();
+      if (!documentSnapshot.exists) {
+        // Document doesn't exist, create a new document
+        await userDocRef.set({'diseaseHistory': []});
+      }
+      var data = documentSnapshot.data() as Map<String, dynamic>?;
+
+      var existingImageDiseaseHistory = data?['diseaseHistory'] ?? [];
+
+      var newDiseaseImageEntry = {
+          'imageUrl': imageUrl,
+          'output': output,
+          'time': time,
+        };
+      existingImageDiseaseHistory.add(newDiseaseImageEntry);
+
+      // Update the Firestore document with the modified 'recipe' array
+      await userDocRef.update({'diseaseHistory': existingImageDiseaseHistory});
+    } catch (e) {
+      // print("Error updating Firestore document: $e");
+    }
+  }
+
   pickImage() async {
-    var image = await picker.pickImage(source: ImageSource.camera);
-    if (image == null) return null;
+    XFile? imageFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (imageFile == null) return null;
 
     setState(() {
-      _image = File(image.path);
+      _image = File(imageFile.path);
     });
+
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // get a reference to storage root
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('images');
+
+    // create a reference for the image to be stored
+    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+    // handle errors/success
+    try {
+      // store the file
+      await referenceImageToUpload.putFile(
+        File(imageFile.path),
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+
+      // success: get the download URL
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+    } catch (error) {
+      // print(error);
+    }
 
     detectImage(_image);
   }
 
   pickGalleryImage() async {
-    var image = await picker.pickImage(source: ImageSource.gallery);
-    if (image == null) return null;
+    XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
+    if (imageFile == null) return null;
 
     setState(() {
-      _image = File(image.path);
+      _image = File(imageFile.path);
     });
+
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // get a reference to storage root
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('images');
+
+    // create a reference for the image to be stored
+    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+    // handle errors/success
+    try {
+      // store the file
+      await referenceImageToUpload.putFile(
+        File(imageFile.path),
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+
+      // success: get the download URL
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+    } catch (error) {
+      // print(error);
+    }
 
     detectImage(_image);
   }
@@ -130,9 +223,7 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
                           child: Image.file(_image),
                         ),
                         const SizedBox(height: 20),
-                        _output != null &&
-                                _output.isNotEmpty &&
-                                _output[0]['label'] != null
+                        _output.isNotEmpty && _output[0]['label'] != null
                             ? Text(
                                 '${_output[0]['label']}',
                                 style: const TextStyle(
@@ -152,7 +243,7 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
                       pickImage();
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width - 250,
+                      width: MediaQuery.of(context).size.width,
                       alignment: Alignment.bottomCenter,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 18),
@@ -167,6 +258,7 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -176,7 +268,7 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
                       pickGalleryImage();
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width - 250,
+                      width: MediaQuery.of(context).size.width,
                       alignment: Alignment.bottomCenter,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 18),
@@ -191,6 +283,7 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),

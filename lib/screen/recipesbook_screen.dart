@@ -170,7 +170,7 @@ class _RecipesBookScreenState extends State<RecipesBookScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: 20.0),
+                  margin: const EdgeInsets.only(bottom: 0.0),
                   child: MyButton(
                       text: "Generate Recipe",
                       onTap: () async {

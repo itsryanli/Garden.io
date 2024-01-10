@@ -2,12 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gardenio/components/content_box.dart';
 import 'package:gardenio/models/weather_model.dart';
+import 'package:gardenio/screen/disease_history_screen.dart';
 import 'package:gardenio/screen/recipesbook_screen.dart';
 import 'package:gardenio/screen/diseasecheck_screen.dart';
 import 'package:gardenio/screen/gardenpreplan_screen.dart';
 import 'package:gardenio/screen/profile_screen.dart';
 import 'package:gardenio/screen/recipe_history_screen.dart';
 import 'package:gardenio/services/weather_services.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -29,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Recipe history data
   List<Map<String, dynamic>> recipeHistory = [];
+  List<Map<String, dynamic>> diseaseHistory = [];
 
   // Fetch recipe history data
   _fetchRecipeHistory() async {
@@ -50,6 +53,34 @@ class _HomeScreenState extends State<HomeScreen> {
         if (rawRecipeHistory is List) {
           // Convert each item to Map<String, dynamic>
           recipeHistory = rawRecipeHistory
+              .cast<Map<String, dynamic>>()
+              .toList(); // Assuming each item is a Map<String, dynamic>
+        }
+      }
+    } catch (e) {
+      // print("Error fetching recipe history: $e");
+    }
+  }
+
+  _fetchDiseaseHistory() async {
+    try {
+      // Retrieve the document snapshot using the user's UID
+      var documentSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      // Check if the document exists
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+
+        // Retrieve the 'recipeHistory' field from the document
+        var rawDiseaseHistory = data?['diseaseHistory'];
+
+        // Check if 'recipeHistory' is a List and not null
+        if (rawDiseaseHistory is List) {
+          // Convert each item to Map<String, dynamic>
+          diseaseHistory = rawDiseaseHistory
               .cast<Map<String, dynamic>>()
               .toList(); // Assuming each item is a Map<String, dynamic>
         }
@@ -83,13 +114,17 @@ class _HomeScreenState extends State<HomeScreen> {
     // fetch weather on startup
     _fetchWeather();
 
-    // Fetch recipe history on startup
+    // fetch recipe history on startup
     _fetchRecipeHistory();
+
+    // fetch disease history on startup
+    _fetchDiseaseHistory();
   }
 
   // Wrap the asynchronous calls in a method
   Future<void> _initializeData() async {
     await _fetchRecipeHistory();
+    await _fetchDiseaseHistory();
   }
 
   @override
@@ -110,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return HomeBodyContent(
                 weather: _weather,
                 recipeHistory: recipeHistory,
+                diseaseHistory: diseaseHistory,
                 rebuildCallback: _fetchData,
               );
             } else {
@@ -124,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _fetchData() {
     _fetchWeather();
     _fetchRecipeHistory();
+    _fetchDiseaseHistory();
     setState(() {}); // Trigger a rebuild
   }
 }
@@ -220,16 +257,26 @@ void signUserOut() {
   FirebaseAuth.instance.signOut();
 }
 
+String formatDate(Timestamp timestamp) {
+  DateTime dateTime = timestamp.toDate();
+  String formattedDate = DateFormat('MMMM d, y - h:mm:ss a', 'en_US').format(dateTime.toUtc().add(const Duration(hours: 8)));
+  return formattedDate;
+}
+
+
+
 // home screen content
 class HomeBodyContent extends StatelessWidget {
   final Weather? weather;
   final List<Map<String, dynamic>> recipeHistory;
+  final List<Map<String, dynamic>> diseaseHistory;
   final VoidCallback rebuildCallback;
 
   const HomeBodyContent({
     Key? key,
     this.weather,
     required this.recipeHistory,
+    required this.diseaseHistory,
     required this.rebuildCallback,
   }) : super(key: key);
 
@@ -320,18 +367,27 @@ class HomeBodyContent extends StatelessWidget {
 
             // Third Content Box
             ContentBox(
-              title: 'You have yet to check your plants!',
+              title: diseaseHistory.isEmpty
+                  ? "You have yet to check your plants!"
+                  : '${formatDate(diseaseHistory.last["time"])}: \n ${diseaseHistory.last["output"]}',
               descriptionFirst: 'Go to Disease Check',
-              descriptionSecond: '',
-              secondBtn: false,
-              onPressedFirst: () {
+              descriptionSecond: 'History',
+              secondBtn: true,
+              onPressedFirst: () async {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const DiseaseCheckScreen(),
                   ),
                 );
+                rebuildCallback();
               },
-              onPressedSecond: () {},
+              onPressedSecond: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const DiseaseHistoryScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),
