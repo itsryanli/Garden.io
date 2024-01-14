@@ -186,12 +186,20 @@ class _RecipesBookScreenState extends State<RecipesBookScreen> {
                         });
 
                         // separate the content into three parts: title, ingredients, instructions
+                        int titleIndex = response.indexOf("Recipe:");
+                        String title = '';
+                        
                         int ingredientsIndex = response.indexOf("Ingredients:");
                         int instructionsIndex =
                             response.indexOf("Instructions:");
                         if (ingredientsIndex != -1) {
-                          String title =
-                              response.substring(0, ingredientsIndex).trim();
+                          if(titleIndex != -1){
+                            title =
+                                response.substring(titleIndex + 7, ingredientsIndex).trim();
+                          }else{
+                            title =
+                                response.substring(0, ingredientsIndex).trim();
+                          }
                           String ingredients = response
                               .substring(
                                   ingredientsIndex + 12, instructionsIndex)

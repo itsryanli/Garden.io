@@ -19,8 +19,8 @@ class GenerateRecipeService{
           'Authorization': 'Bearer ${dotenv.env['token']}'
         },
         body: jsonEncode({
-            "model": "gpt-3.5-turbo",
-            "max_tokens": 250,
+            "model": "gpt-4",
+            "max_tokens": 2500,
             "temperature": 0,
             "top_p": 1,
             "messages": [

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gardenio/components/content_box.dart';
 import 'package:gardenio/models/weather_model.dart';
 import 'package:gardenio/screen/disease_history_screen.dart';
-import 'package:gardenio/screen/recipesbook_screen.dart';
-import 'package:gardenio/screen/diseasecheck_screen.dart';
-import 'package:gardenio/screen/gardenpreplan_screen.dart';
+import 'package:gardenio/screen/recipes_book_screen.dart';
+import 'package:gardenio/screen/disease_check_screen.dart';
+import 'package:gardenio/screen/garden_preplan_screen.dart';
 import 'package:gardenio/screen/profile_screen.dart';
 import 'package:gardenio/screen/recipe_history_screen.dart';
 import 'package:gardenio/services/weather_services.dart';
@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // weather api key
   // apiKey = c5637386d600144341ebeee38e35c864, replace this with the apiKey below
-  final _weatherService = WeatherService('apiKey');
+  final _weatherService = WeatherService('c5637386d600144341ebeee38e35c864');
 
   Weather? _weather;
 

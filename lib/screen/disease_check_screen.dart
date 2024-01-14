@@ -58,7 +58,7 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
           _loading = false;
         });
         updateFirestoreWithNewImage(
-            imageUrl, _output[0]['label'], DateTime.now());
+            imageUrl, _output[0]['label'].split(' ').skip(1).join(' '), DateTime.now());
 
         // print("Model Output: $_output");
       } else {
@@ -80,11 +80,11 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
     }
   }
 
-  // Method to update Firestore document with a new recipe entry
+  // Method to update Firestore document with a new disease entry
   Future<void> updateFirestoreWithNewImage(
       String imageUrl, String output, DateTime time) async {
     try {
-      // Retrieve existing content of the 'recipe' array
+      // Retrieve existing content of the 'disease' array
       var documentSnapshot = await userDocRef.get();
       if (!documentSnapshot.exists) {
         // Document doesn't exist, create a new document
@@ -101,7 +101,7 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
         };
       existingImageDiseaseHistory.add(newDiseaseImageEntry);
 
-      // Update the Firestore document with the modified 'recipe' array
+      // Update the Firestore document with the modified 'disease' array
       await userDocRef.update({'diseaseHistory': existingImageDiseaseHistory});
     } catch (e) {
       // print("Error updating Firestore document: $e");
@@ -222,14 +222,18 @@ class _DiseaseCheckScreenState extends State<DiseaseCheckScreen> {
                           height: 250,
                           child: Image.file(_image),
                         ),
+
                         const SizedBox(height: 20),
+
                         _output.isNotEmpty && _output[0]['label'] != null
                             ? Text(
-                                '${_output[0]['label']}',
+                                  //Only take the disease name without including the prefix number
+                                'Disease: ${_output[0]['label'].split(' ').skip(1).join(' ')}',
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 15),
                               )
                             : Container(),
+                            
                         const SizedBox(height: 10),
                       ],
                     ),

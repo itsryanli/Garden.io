@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gardenio/components/my_button.dart';
 import 'package:gardenio/components/my_textfield.dart';
-import 'package:gardenio/components/square.tile.dart';
+import 'package:gardenio/components/square_tile.dart';
 import 'package:gardenio/screen/forgot_password_screen.dart';
 import 'package:gardenio/services/auth_services.dart';
 

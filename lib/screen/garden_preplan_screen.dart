@@ -120,8 +120,8 @@ class _GardenPreplanScreenState extends State<GardenPreplanScreen> {
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: SizedBox(
-                    height: 450,
-                    width: 300,
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width,
                     child: YoutubePlayer(
                       controller: _controller,
                       showVideoProgressIndicator: true,
